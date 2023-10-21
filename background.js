@@ -58,9 +58,9 @@ function stopTimer() {
   timerRunning = false;
 }
 
-function resetTimer25() {
+function resetTimer(y) {
   stopTimer();
-  timerDuration = 25 * 60;
+  timerDuration = y * 60;
   sendUpdateToPopup();
 }
 
@@ -76,8 +76,16 @@ function updateTimer() {
     sendUpdateToPopup();
   } else {
     stopTimer();
+    if (x==0 || x==2) {
+      resetTimer(5);
+    }
+    else {
+      resetTimer(25);
+    }
     x++;
-    resetTimer5();
+    if (x==7) {
+      resetTimer(30);
+    }
     // Handle timer completion (e.g., show a notification)
   }
 }
@@ -92,13 +100,5 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     startTimer();
   } else if (message.type === "stopTimer") {
     stopTimer();
-  } else if (message.type === "resetTimer") {
-    if (x==0 || x==2) {
-      resetTimer5();
-    }
-    else {
-      resetTimer25();
-    }
-    
   }
 });

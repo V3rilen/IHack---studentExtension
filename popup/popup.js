@@ -1,7 +1,6 @@
 let timerDisplay = document.getElementById("timer");
 let startButton = document.getElementById("startButton");
 let stopButton = document.getElementById("stopButton");
-let resetButton = document.getElementById("resetButton");
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "timerUpdate") {
@@ -19,6 +18,4 @@ stopButton.addEventListener("click", () => {
   chrome.runtime.sendMessage({ type: "stopTimer" });
 });
 
-resetButton.addEventListener("click", () => {
-  chrome.runtime.sendMessage({ type: "resetTimer" });
-});
+
