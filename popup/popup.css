@@ -1,0 +1,27 @@
+.popup {
+    width: 250px;
+    padding: 10px;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  li {
+    margin: 5px 0;
+  }
+  
+  button {
+    margin-top: 10px;
+    background-color: #0073e6;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #005bb3;
+  }
+  
