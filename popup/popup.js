@@ -50,18 +50,24 @@ document
   });
 
 //Sessions
-savedSessions = {};
+let savedSessions = {};
+//initialize with a placeholder to avoid null exceptions when saving sessions
+savedSessions["placeholder"] = ["placeholder", "placeholder"];
 const sessionsDiv = document.getElementById("sessions-display");
 
 document.addEventListener("DOMContentLoaded", async () => {
+  //clear used when debugging
+  //chrome.storage.local.clear();
   fetchedSessions = await chrome.storage.local.get(["savedSessions"]);
-  savedSessions = fetchedSessions.savedSessions;
-  console.log(savedSessions);
-  // chrome.storage.local.clear();
-
-  if (Object.keys(savedSessions).length) {
+  //object may be empty if no sessions are saved. This will only make the assignment if there is content to assign
+  if (Object.keys(fetchedSessions).length != 0){
+    savedSessions = fetchedSessions.savedSessions;
     console.log("there are saved sessions: " + savedSessions);
+  }
+  
+  if (Object.keys(savedSessions).length) {
     Object.keys(savedSessions).forEach((sessionName) => {
+      if (sessionName === "placeholder") return; //placeholder doesn't show on menu
       const newButton = document.createElement("button");
       newButton.textContent = sessionName;
       newButton.addEventListener("click", function () {
