@@ -39,11 +39,6 @@ clearHighlightsButton.addEventListener("click", async () => {
   );
 });
 
-// const clearHighlights = () => {
-
-//   // chrome.tabs.sendMessage(tab.id, { message_id: "clearHighlights" });
-//   // chrome.storage.local.clear();
-// };
 document.getElementById("flashcard-window-button").addEventListener("click", () => {
   chrome.windows.create({
     url: "flashcards/flashcards.html",
@@ -52,3 +47,58 @@ document.getElementById("flashcard-window-button").addEventListener("click", () 
     height: 600,
   });
 });
+
+//Sessions
+savedSessions = {};
+const sessionsDiv = document.getElementById("sessions-display");
+
+document.addEventListener("DOMContentLoaded", async () => {
+  fetchedSessions = await chrome.storage.local.get(["savedSessions"]);
+  savedSessions = fetchedSessions.savedSessions;
+  console.log(savedSessions);
+  // chrome.storage.local.clear();
+
+  if(Object.keys(savedSessions).length) {
+    console.log("there are saved sessions: " + savedSessions);
+    Object.keys(savedSessions).forEach( (sessionName) => {
+      const newButton = document.createElement('button');
+      newButton.textContent = sessionName;
+      newButton.addEventListener('click', function() {
+        openSession(savedSessions[sessionName])
+      });
+      sessionsDiv.appendChild(newButton);
+    })
+  }
+})
+
+document.getElementById("save-session").addEventListener("click", () => {
+  const sessionName = prompt("Enter a name for your session. \n (keep the same name to overwrite)");
+  if(!sessionName) return
+  chrome.tabs.query({}, function(tabs) {
+    const urls = tabs.map(tab => tab.url);
+    savedSessions[sessionName] = urls;
+
+    // Update local storage with the updated sessions
+    chrome.storage.local.set({"savedSessions": savedSessions });
+    console.log(savedSessions);
+
+    // Create a button for the new session
+    const newButton = document.createElement('button');
+    newButton.textContent = sessionName;
+    newButton.addEventListener('click', function() {
+      openSession(savedSessions[sessionName])
+    });
+    sessionsDiv.appendChild(newButton);
+  });
+});
+
+function openSession(urls) {
+  // Create a new Chrome window
+  chrome.windows.create({ focused: true }, function (window) {
+    // Loop through the URLs in the session and open each one as a new tab in the new window
+    urls.forEach(function (url) {
+      chrome.tabs.create({ url: url, windowId: window.id });
+    });
+  });
+}
+
