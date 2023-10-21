@@ -77,6 +77,7 @@ function updateTimer() {
   } else {
     stopTimer();
     x++;
+    resetTimer5();
     // Handle timer completion (e.g., show a notification)
   }
 }
