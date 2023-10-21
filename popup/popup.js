@@ -39,10 +39,10 @@ clearHighlightsButton.addEventListener("click", async () => {
 });
 
 document
-  .getElementById("flashcard-window-button")
+  .getElementById("highlight-library-window-button")
   .addEventListener("click", () => {
     chrome.windows.create({
-      url: "flashcards/flashcards.html",
+      url: "./highlight-library/index.html",
       type: "popup",
       width: 800, // Adjust the size as needed
       height: 600,
