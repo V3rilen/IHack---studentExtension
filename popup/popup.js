@@ -2,6 +2,7 @@ let timerDisplay = document.getElementById("timer");
 let startButton = document.getElementById("startButton");
 let stopButton = document.getElementById("stopButton");
 let clearHighlightsButton = document.getElementById("clearHighlightsButton");
+let statisdisplay = document.getElementById("statis");
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "timerUpdate") {
     console.log("log");
@@ -10,6 +11,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     timerDisplay.textContent = `${minutes.toString().padStart(2, "0")}:${seconds
       .toString()
       .padStart(2, "0")}`;
+  }
+  if (message.timerIndex%2==0) {
+    statisdisplay.textContent = "Work for ";
+  }
+  else {
+    statisdisplay.textContent = "Break for ";
   }
 });
 

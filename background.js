@@ -57,7 +57,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 });
 
 let timerInterval;
-let timerDuration = [5, 3, 5, 3, 5, 3, 5, 8]; // Initial duration (25 minutes in seconds)
+let timerDuration = [5, 3, 1500, 300, 1500, 30, 1500, 1800]; // Initial duration (25 minutes in seconds)
 let timerRunning = false;
 let timerIndex = 0;
 let timeRemaining = timerDuration[timerIndex];
@@ -77,9 +77,11 @@ function pauseTimer() {
 function resetTimer() {
   console.log(timerIndex);
   pauseTimer();
+
   if (timerIndex == 7) timerIndex = -1;
   timerIndex++;
   timeRemaining = timerDuration[timerIndex];
+
   sendUpdateToPopup();
 }
 
@@ -92,7 +94,7 @@ function updateTimer() {
 }
 
 function sendUpdateToPopup() {
-  chrome.runtime.sendMessage({ type: "timerUpdate", timeLeft: timeRemaining });
+  chrome.runtime.sendMessage({ type: "timerUpdate", timeLeft: timeRemaining, timerIndex:timerIndex });
 }
 
 // Listen for messages from the popup
@@ -102,4 +104,28 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.type === "stopTimer") {
     pauseTimer();
   }
+});
+
+function showNotification() {
+  const options = {
+    type: "basic",
+    title: "Timer Completed",
+    message: "Your timer has finished!",
+    iconUrl: "./../images/icon-128px.png", // Provide a path to an icon for the notification.
+    silent: true, // Set to true if you want to play a sound.
+  };
+
+  chrome.notifications.create("timerCompleteNotification", options, (notificationId) => {
+    // Handle notification creation (optional).
+  });
+}
+
+// Add a listener to handle notification click events.
+chrome.notifications.onClicked.addListener((notificationId) => {
+  // Handle notification click (optional).
+});
+
+// Add a listener to handle notification close events.
+chrome.notifications.onClosed.addListener((notificationId, byUser) => {
+  // Handle notification close (optional).
 });
