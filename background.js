@@ -4,6 +4,11 @@ chrome.contextMenus.create({
   title: "Highlight Text",
   contexts: ["selection"],
 });
+chrome.contextMenus.create({
+  id: "clearHighlights",
+  title: "Clear All Highlights",
+  // contexts: ["selection"],
+});
 //context menu option to look up rate my professor
 rateID = "rateProfessors";
 chrome.contextMenus.create({
@@ -41,6 +46,14 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         data: selectedText,
       });
     }
+  } else if (info.menuItemId === "clearHighlights") {
+    const [tab] = await chrome.tabs.query({
+      active: true,
+      lastFocusedWindow: true,
+    });
+    chrome.tabs.sendMessage(tab.id, {
+      message_id: "clearHighlights",
+    });
   }
 });
 
