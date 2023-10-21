@@ -70,10 +70,22 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (sessionName === "placeholder") return; //placeholder doesn't show on menu
       const newButton = document.createElement("button");
       newButton.textContent = sessionName;
+      newButton.setAttribute('id', sessionName);
       newButton.addEventListener("click", function () {
         openSession(savedSessions[sessionName]);
       });
       sessionsDiv.appendChild(newButton);
+
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = "del";
+      deleteButton.addEventListener("click", async function () {
+        document.getElementById(sessionName).remove();
+        deleteButton.remove();
+        delete savedSessions[sessionName];
+        chrome.storage.local.clear();
+        chrome.storage.local.set({ savedSessions: savedSessions });
+      })
+      sessionsDiv.appendChild(deleteButton);
     });
   }
 });
