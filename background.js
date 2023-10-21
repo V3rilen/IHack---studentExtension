@@ -57,7 +57,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
 
 let timerInterval;
-let timerDuration = [5, 3, 5, 3, 5, 3, 5, 8]; // Initial duration (25 minutes in seconds)
+let timerDuration = [15, 30, 15, 30, 15, 3, 15, 18]; // Initial duration (25 minutes in seconds)
 let timerRunning = false;
 let timerIndex = 0;
 let timeRemaining = timerDuration[timerIndex];
@@ -77,23 +77,25 @@ function pauseTimer() {
 function resetTimer() {
   console.log(timerIndex);
   pauseTimer();
-  if (timerIndex == 7) timerIndex = -1;
-  timerIndex++;
+  if (timerIndex == 7) { timerIndex = 0; }
   timeRemaining = timerDuration[timerIndex]
   sendUpdateToPopup();
 }
 
 
 function updateTimer() {
-  timeRemaining--;
-  sendUpdateToPopup()
-  if(timeRemaining==0){
+  if (timeRemaining > 0) {
+    timeRemaining--;
+    sendUpdateToPopup();
+  } else {
+    console.log("not calling it");
+    timerIndex++;
     resetTimer();
   }
 }
 
 function sendUpdateToPopup() {
-  chrome.runtime.sendMessage({ type: "timerUpdate", timeLeft: timeRemaining });
+  chrome.runtime.sendMessage({ type: "timerUpdate", timeLeft: timeRemaining, timerIndex:timerIndex });
 }
 
 // Listen for messages from the popup
