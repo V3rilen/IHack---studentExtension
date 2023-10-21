@@ -52,14 +52,18 @@ function createElementAtXPath(xpath, newElement) {
 // createElementAtXPath(targetXPath, newElementInfo);
 
 (async () => {
+  let highlights = {};
   console.log("context.js loaded");
   const currentURL = window.location.toString();
 
   let pageHighlights = [];
-  let fetchedHighlights = await fetchHighlights(currentURL);
-  if (fetchedHighlights[currentURL]) {
-    pageHighlights = [...fetchedHighlights[currentURL]];
-    pageHighlights.forEach((highlight) => {
+  let fetchedHighlights = await chrome.storage.local.get("savedHighlights");
+  if (fetchedHighlights.savedHighlights) {
+    pageHighlights = [...fetchedHighlights.savedHighlights[currentURL]];
+    // console.log("Saved Highlights:", pageHighlights);
+    Object.keys(pageHighlights).forEach((pageURL) => {
+      let highlight = pageHighlights[pageURL];
+      //   console.log(highlight);
       //   console.log(highlight.textContent, highlight.xpath.split("/span")[0]);
       createElementAtXPath(highlight.xpath.split("/span")[0], {
         tagName: "span",
@@ -97,6 +101,7 @@ function createElementAtXPath(xpath, newElement) {
             };
             // console.log(highlightData);
             pageHighlights.push(highlightData);
+            highlights[currentURL] = pageHighlights;
 
             //   console.log(getElementXPath(newHighlightedElement.parentElement));
             //   const targetXPath = getElementXPath(
@@ -120,14 +125,16 @@ function createElementAtXPath(xpath, newElement) {
             //   console.log(document.documentElement.toString());
           }
           chrome.storage.local.set({
-            [currentURL]: pageHighlights,
+            savedHighlights: highlights,
           });
           //   chrome.storage.local.clear();
-          let tempHighlights = await fetchHighlights(currentURL);
-          console.log([...tempHighlights[currentURL]]);
+          let tempHighlights = await fetchHighlights("savedHighlights");
+          console.log(tempHighlights);
         }
       } else if (request.message_id == "clearHighlights") {
-        chrome.storage.local.remove([currentURL]);
+        if (confirm("Are you sure you want to delete all Highlights?")) {
+          chrome.storage.local.remove("savedHighlights");
+        }
       }
       /* Content script action */
     }
