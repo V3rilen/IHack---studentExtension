@@ -7,7 +7,8 @@
       "activeTab","contextMenus","tabs"
     ],
     "action": {
-      "default_popup": "./popup/popup.html"
+      "default_popup": "./popup/popup.html",
+      "default_popup_is_panel": true
     },
   
     "background": {
