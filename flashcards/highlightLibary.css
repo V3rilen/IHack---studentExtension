@@ -34,3 +34,15 @@ body {
   font-size: 24px;
   margin-top: 20px; /* Add margin to push the button down */
 }
+
+/* In flashcards.css */
+.highlightLibary {
+  width: 300px;
+  height: 200px;
+  border: 2px solid black;
+  margin: 10px; /* Add margin between highlightLibary for spacing */
+  padding: 10px;
+  font-size: 18px;
+  text-align: center;
+  background-color: lightblue; /* Example background color */
+}
