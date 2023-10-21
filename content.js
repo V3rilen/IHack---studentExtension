@@ -120,7 +120,7 @@ function createElementAtXPath(xpath, newElement) {
             const newHighlightedElement = document.createElement("span");
             newHighlightedElement.className = "highlighted";
             selectedTextRange.surroundContents(newHighlightedElement);
-            console.log();
+            console.log(selectedTextRange);
             let highlightData = {
               xpath: getXPathOfElement(newHighlightedElement),
               parentNodeHTML:
@@ -159,8 +159,7 @@ function createElementAtXPath(xpath, newElement) {
           console.log([...tempHighlights[currentURL]]);
         }
       } else if (request.message_id == "clearHighlights") {
-        console.log("hit");
-        chrome.storage.local.clear();
+        chrome.storage.local.remove([currentURL]);
       }
       /* Content script action */
     }
