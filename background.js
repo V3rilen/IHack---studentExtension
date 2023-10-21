@@ -44,6 +44,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 let timerInterval;
 let timerDuration = 25 * 60; // Initial duration (25 minutes in seconds)
 let timerRunning = false;
+let x = 0;
 
 function startTimer() {
   if (!timerRunning) {
@@ -57,9 +58,15 @@ function stopTimer() {
   timerRunning = false;
 }
 
-function resetTimer(x) {
+function resetTimer25() {
   stopTimer();
-  timerDuration = x * 60;
+  timerDuration = .5 * 60;
+  sendUpdateToPopup();
+}
+
+function resetTimer5() {
+  stopTimer();
+  timerDuration = 5 * 60;
   sendUpdateToPopup();
 }
 
@@ -69,6 +76,7 @@ function updateTimer() {
     sendUpdateToPopup();
   } else {
     stopTimer();
+    x++;
     // Handle timer completion (e.g., show a notification)
   }
 }
@@ -84,6 +92,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.type === "stopTimer") {
     stopTimer();
   } else if (message.type === "resetTimer") {
-    resetTimer(5);
+    if (x==0 || x==2) {
+      resetTimer5();
+    }
+    else {
+      resetTimer25();
+    }
+    
   }
 });
