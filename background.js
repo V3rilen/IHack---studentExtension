@@ -44,17 +44,17 @@ rateID = "rateProfessors";
 chrome.contextMenus.create({
   id: rateID,
   title: "Look up professor rating",
-  contexts: ["selection"]
+  contexts: ["selection"],
 });
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId == rateID) {
     const selectedText = info.selectionText;
     console.log(selectedText);
-    const searchURL = "https://www.ratemyprofessors.com/search/professors?q=" + selectedText;
-    chrome.tabs.create({ url: searchURL});
+    const searchURL =
+      "https://www.ratemyprofessors.com/search/professors?q=" + selectedText;
+    chrome.tabs.create({ url: searchURL });
   }
 });
-
 
 let timerInterval;
 let timerDuration = [5, 3, 1500, 300, 1500, 30, 1500, 1800]; // Initial duration (25 minutes in seconds)
@@ -77,19 +77,18 @@ function pauseTimer() {
 function resetTimer() {
   console.log(timerIndex);
   pauseTimer();
-  if (timerIndex == 7) { timerIndex = 0; }
-  timeRemaining = timerDuration[timerIndex]
+
+  if (timerIndex == 7) timerIndex = -1;
+  timerIndex++;
+  timeRemaining = timerDuration[timerIndex];
+
   sendUpdateToPopup();
 }
 
-
 function updateTimer() {
-  if (timeRemaining > 0) {
-    timeRemaining--;
-    sendUpdateToPopup();
-  } else {
-    showNotification();
-    timerIndex++;
+  timeRemaining--;
+  sendUpdateToPopup();
+  if (timeRemaining == 0) {
     resetTimer();
   }
 }
