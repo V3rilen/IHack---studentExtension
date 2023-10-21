@@ -11,6 +11,6 @@ async function functionNameHere(){
     console.log(allHighlights);
 }
 
-getHighlightsButton.addEventListener("click", async () => {
-  console.log(chrome.storage.local.get());
-});
+// getHighlightsButton.addEventListener("click", async () => {
+//   console.log(chrome.storage.local.get());
+// });
