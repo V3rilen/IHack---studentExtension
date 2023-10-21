@@ -71,7 +71,7 @@ function updateTimer() {
     sendUpdateToPopup();
   } else {
     stopTimer();
-    if (x==0 || x==2) {
+    if (x%2==0) {
       resetTimer(5);
     }
     else {
