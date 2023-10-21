@@ -1,10 +1,25 @@
+highlightID = "highlightText";
 chrome.contextMenus.create({
-  id: "highlight_text",
+  id: "highlightText",
   title: "Highlight Text",
   contexts: ["selection"],
 });
+
+//context menu option to look up rate my professor
+rateID = "rateProfessors";
+chrome.contextMenus.create({
+  id: rateID,
+  title: "Look up professor rating",
+  contexts: ["selection"],
+});
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (info.menuItemId === "highlight_text") {
+  if (info.menuItemId == rateID) {
+    const selectedText = info.selectionText;
+    console.log(selectedText);
+    const searchURL =
+      "https://www.ratemyprofessors.com/search/professors?q=" + selectedText;
+    chrome.tabs.create({ url: searchURL });
+  } else if (info.menuItemId === "highlightText") {
     const selectedText = info.selectionText;
     console.log(info);
     if (selectedText) {
@@ -17,25 +32,9 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         lastFocusedWindow: true,
       });
       chrome.tabs.sendMessage(tab.id, {
-        message_id: "highlight_text",
+        message_id: "highlightText",
         data: selectedText,
       });
     }
-  }
-});
-
-//context menu option to look up rate my professor
-rateID = "rateProfessors";
-chrome.contextMenus.create({
-  id: rateID,
-  title: "Look up professor rating",
-  contexts: ["selection"]
-});
-chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (info.menuItemId == rateID) {
-    const selectedText = info.selectionText;
-    console.log(selectedText);
-    const searchURL = "https://www.ratemyprofessors.com/search/professors?q=" + selectedText;
-    chrome.tabs.create({ url: searchURL});
   }
 });
