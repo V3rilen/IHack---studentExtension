@@ -42,7 +42,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
 
 let timerInterval;
-let timerDuration = 25 * 60; // Initial duration (25 minutes in seconds)
+let timerDuration = 1 * 60; // Initial duration (25 minutes in seconds)
 let timerRunning = false;
 
 function startTimer() {
