@@ -44,7 +44,6 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 let timerInterval;
 let timerDuration = 25 * 60; // Initial duration (25 minutes in seconds)
 let timerRunning = false;
-let port; // The connection between background and popup
 
 function startTimer() {
   if (!timerRunning) {
@@ -59,43 +58,32 @@ function stopTimer() {
 }
 
 function resetTimer() {
-  clearInterval(timerInterval);
-  timerRunning = false;
+  stopTimer();
   timerDuration = 25 * 60;
-  updatePopupTimer();
+  sendUpdateToPopup();
 }
 
 function updateTimer() {
   if (timerDuration > 0) {
     timerDuration--;
-    updatePopupTimer();
+    sendUpdateToPopup();
   } else {
     stopTimer();
     // Handle timer completion (e.g., show a notification)
   }
 }
 
-function updatePopupTimer() {
-  if (port) {
-    port.postMessage({ type: "updateTimer", timeLeft: timerDuration });
-  }
+function sendUpdateToPopup() {
+  chrome.runtime.sendMessage({ type: "timerUpdate", timeLeft: timerDuration });
 }
 
-// Handle connections from popup script
-chrome.runtime.onConnect.addListener((connectedPort) => {
-  port = connectedPort;
-
-  port.onMessage.addListener((message) => {
-    if (message.type === "startTimer") {
-      startTimer();
-    } else if (message.type === "stopTimer") {
-      stopTimer();
-    } else if (message.type === "resetTimer") {
-      resetTimer();
-    }
-  });
-
-  port.onDisconnect.addListener(() => {
-    port = null;
-  });
+// Listen for messages from the popup
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "startTimer") {
+    startTimer();
+  } else if (message.type === "stopTimer") {
+    stopTimer();
+  } else if (message.type === "resetTimer") {
+    resetTimer();
+  }
 });

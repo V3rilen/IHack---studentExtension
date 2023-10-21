@@ -3,11 +3,8 @@ let startButton = document.getElementById("startButton");
 let stopButton = document.getElementById("stopButton");
 let resetButton = document.getElementById("resetButton");
 
-// Connect to the background script
-const port = chrome.runtime.connect({ name: "popup" });
-
-port.onMessage.addListener((message) => {
-  if (message.type === "updateTimer") {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "timerUpdate") {
     const minutes = Math.floor(message.timeLeft / 60);
     const seconds = message.timeLeft % 60;
     timerDisplay.textContent = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
@@ -15,13 +12,13 @@ port.onMessage.addListener((message) => {
 });
 
 startButton.addEventListener("click", () => {
-  port.postMessage({ type: "startTimer" });
+  chrome.runtime.sendMessage({ type: "startTimer" });
 });
 
 stopButton.addEventListener("click", () => {
-  port.postMessage({ type: "stopTimer" });
+  chrome.runtime.sendMessage({ type: "stopTimer" });
 });
 
 resetButton.addEventListener("click", () => {
-  port.postMessage({ type: "resetTimer" });
+  chrome.runtime.sendMessage({ type: "resetTimer" });
 });
