@@ -20,5 +20,5 @@ stopButton.addEventListener("click", () => {
 });
 
 resetButton.addEventListener("click", () => {
-  chrome.runtime.sendMessage({ type: "resetTimer(5)" });
+  chrome.runtime.sendMessage({ type: "resetTimer()" });
 });

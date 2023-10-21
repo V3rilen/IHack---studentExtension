@@ -84,6 +84,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.type === "stopTimer") {
     stopTimer();
   } else if (message.type === "resetTimer") {
-    resetTimer();
+    resetTimer(5);
   }
 });
