@@ -42,7 +42,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
 
 let timerInterval;
-let timerDuration = 25 * 60; // Initial duration (25 minutes in seconds)
+let timerDuration = .5 * 60; // Initial duration (25 minutes in seconds)
 let timerRunning = false;
 let x = 0;
 
@@ -60,7 +60,7 @@ function stopTimer() {
 
 function resetTimer25() {
   stopTimer();
-  timerDuration = .5 * 60;
+  timerDuration = 25 * 60;
   sendUpdateToPopup();
 }
 
