@@ -27,16 +27,16 @@ stopButton.addEventListener("click", () => {
   chrome.runtime.sendMessage({ type: "stopTimer" });
 });
 
-clearHighlightsButton.addEventListener("click", async () => {
-  console.log("attempting to send message");
-  await chrome.tabs.query(
-    { active: true, currentWindow: true },
-    function (tabs) {
-      const activeTab = tabs[0];
-      chrome.tabs.sendMessage(activeTab.id, { message_id: "clearHighlights" });
-    }
-  );
-});
+// clearHighlightsButton.addEventListener("click", async () => {
+//   console.log("attempting to send message");
+//   await chrome.tabs.query(
+//     { active: true, currentWindow: true },
+//     function (tabs) {
+//       const activeTab = tabs[0];
+//       chrome.tabs.sendMessage(activeTab.id, { message_id: "clearHighlights" });
+//     }
+//   );
+// });
 
 document
   .getElementById("highlight-library-window-button")
@@ -60,23 +60,23 @@ document.addEventListener("DOMContentLoaded", async () => {
   //chrome.storage.local.clear();
   fetchedSessions = await chrome.storage.local.get(["savedSessions"]);
   //object may be empty if no sessions are saved. This will only make the assignment if there is content to assign
-  if (Object.keys(fetchedSessions).length){
+  if (Object.keys(fetchedSessions).length) {
     savedSessions = fetchedSessions.savedSessions;
     console.log("there are saved sessions: " + savedSessions);
   }
-  
+
   if (Object.keys(savedSessions).length) {
     Object.keys(savedSessions).forEach((sessionName) => {
       if (sessionName === "placeholder") return; //placeholder doesn't show on menu
       const newButton = document.createElement("button");
       newButton.textContent = sessionName;
-      newButton.setAttribute('id', sessionName);
+      newButton.setAttribute("id", sessionName);
       newButton.addEventListener("click", function () {
         openSession(savedSessions[sessionName]);
       });
       sessionsDiv.appendChild(newButton);
 
-      const deleteButton = document.createElement('button');
+      const deleteButton = document.createElement("button");
       deleteButton.textContent = "X";
       deleteButton.addEventListener("click", async function () {
         document.getElementById(sessionName).remove();
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         delete savedSessions[sessionName];
         chrome.storage.local.remove(["savedSessions"]);
         chrome.storage.local.set({ savedSessions: savedSessions });
-      })
+      });
       sessionsDiv.appendChild(deleteButton);
     });
   }
@@ -105,23 +105,23 @@ document.getElementById("save-session").addEventListener("click", () => {
 
     // Create a button for the new session
     const newButton = document.createElement("button");
-      newButton.textContent = sessionName;
-      newButton.setAttribute('id', sessionName);
-      newButton.addEventListener("click", function () {
-        openSession(savedSessions[sessionName]);
-      });
-      sessionsDiv.appendChild(newButton);
+    newButton.textContent = sessionName;
+    newButton.setAttribute("id", sessionName);
+    newButton.addEventListener("click", function () {
+      openSession(savedSessions[sessionName]);
+    });
+    sessionsDiv.appendChild(newButton);
 
-      const deleteButton = document.createElement('button');
-      deleteButton.textContent = "X";
-      deleteButton.addEventListener("click", async function () {
-        document.getElementById(sessionName).remove();
-        deleteButton.remove();
-        delete savedSessions[sessionName];
-        chrome.storage.local.remove(["savedSessions"]);
-        chrome.storage.local.set({ savedSessions: savedSessions });
-      })
-      sessionsDiv.appendChild(deleteButton);
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "X";
+    deleteButton.addEventListener("click", async function () {
+      document.getElementById(sessionName).remove();
+      deleteButton.remove();
+      delete savedSessions[sessionName];
+      chrome.storage.local.remove(["savedSessions"]);
+      chrome.storage.local.set({ savedSessions: savedSessions });
+    });
+    sessionsDiv.appendChild(deleteButton);
   });
 });
 
