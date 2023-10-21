@@ -1,5 +1,14 @@
+let highlightsGroup;
+let allHighlights = [];
 async function functionNameHere(){
-    console.log(await chrome.storage.local.get([window.location.toString()]));
+
+    highlightsGroup = await chrome.storage.local.get();
+
+    Object.values(highlightsGroup).forEach(element => {
+        for(i=0; i<element.length; i++)
+        allHighlights.push(element[i].textContent);
+    });
+    console.log(allHighlights);
 }
 
 const otherFunction = () =>{
