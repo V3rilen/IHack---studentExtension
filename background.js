@@ -94,7 +94,11 @@ function updateTimer() {
 }
 
 function sendUpdateToPopup() {
-  chrome.runtime.sendMessage({ type: "timerUpdate", timeLeft: timeRemaining, timerIndex:timerIndex });
+  chrome.runtime.sendMessage({
+    type: "timerUpdate",
+    timeLeft: timeRemaining,
+    timerIndex: timerIndex,
+  });
 }
 
 // Listen for messages from the popup
@@ -115,9 +119,13 @@ function showNotification() {
     silent: true, // Set to true if you want to play a sound.
   };
 
-  chrome.notifications.create("timerCompleteNotification", options, (notificationId) => {
-    // Handle notification creation (optional).
-  });
+  chrome.notifications.create(
+    "timerCompleteNotification",
+    options,
+    (notificationId) => {
+      // Handle notification creation (optional).
+    }
+  );
 }
 
 // Add a listener to handle notification click events.
