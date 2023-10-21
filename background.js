@@ -77,7 +77,7 @@ function pauseTimer() {
 function resetTimer() {
   console.log(timerIndex);
   pauseTimer();
-  if (timerIndex = 7) timerIndex = 0;
+  if (timerIndex = 7) { timerIndex = 0; }
   timeRemaining = timerDuration[timerIndex]
   sendUpdateToPopup();
 }
