@@ -2,38 +2,6 @@ const fetchHighlights = (url) => {
   return chrome.storage.local.get([url]);
 };
 
-// function getXPathOfElement(element) {
-//   if (element.id !== "") {
-//     // If the element has an ID, use it for the XPath
-//     return `//*[@id="${element.id}"]`;
-//   }
-//   if (element === document.body) {
-//     // If we reach the body element, stop
-//     return element.tagName;
-//   }
-
-//   // Find the element's index among its siblings
-//   let index = 1;
-//   let sibling = element;
-//   if (element.classList.contains("highlighted")) {
-//     return (
-//       getXPathOfElement(element.parentNode) +
-//       "/" +
-//       element.tagName +
-//       `[${index}]`
-//     );
-//   }
-
-//   while (sibling && (sibling = sibling.previousElementSibling)) {
-//     index++;
-//   }
-
-//   // Recurse up the DOM to build the full XPath
-//   return (
-//     getXPathOfElement(element.parentNode) + "/" + element.tagName + `[${index}]`
-//   );
-// }
-
 function getXPathOfElement(element) {
   const idx = (sib, name) =>
     sib

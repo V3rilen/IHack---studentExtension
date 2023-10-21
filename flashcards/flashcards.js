@@ -1,10 +1,8 @@
-async function functionNameHere(){
-    console.log(await chrome.storage.local.get([window.location.toString()]));
-}
+const fetchHighlightsByURL = (url) => {
+  return chrome.storage.local.get([url]);
+};
+const getHighlightsButton = document.getElementById("getHighlightsButton");
 
-const otherFunction = () =>{
-
-}
-
-console.log("test");
-functionNameHere();
+getHighlightsButton.addEventListener("click", async () => {
+  console.log(chrome.storage.local.get());
+});
