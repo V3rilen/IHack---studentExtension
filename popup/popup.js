@@ -44,3 +44,11 @@ clearHighlightsButton.addEventListener("click", async () => {
 //   // chrome.tabs.sendMessage(tab.id, { message_id: "clearHighlights" });
 //   // chrome.storage.local.clear();
 // };
+document.getElementById("flashcard-window-button").addEventListener("click", () => {
+  chrome.windows.create({
+    url: "flashcards/flashcards.html",
+    type: "popup",
+    width: 800, // Adjust the size as needed
+    height: 600,
+  });
+});
