@@ -11,9 +11,6 @@ async function functionNameHere(){
     console.log(allHighlights);
 }
 
-const otherFunction = () =>{
-
-}
-
-console.log("test");
-functionNameHere();
+getHighlightsButton.addEventListener("click", async () => {
+  console.log(chrome.storage.local.get());
+});
