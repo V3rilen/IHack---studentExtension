@@ -66,7 +66,7 @@ function resetTimer(y) {
 
 function resetTimer5() {
   stopTimer();
-  timerDuration = 5 * 60;
+  timerDuration = 5 * 1;
   sendUpdateToPopup();
 }
 
