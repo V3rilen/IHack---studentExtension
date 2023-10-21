@@ -45,12 +45,14 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 });
 
 //context menu option to look up rate my professor
-rateID = "rateProfessors";
-chrome.contextMenus.create({
-  id: rateID,
-  title: "Look up professor rating",
-  contexts: ["selection"],
-});
+
+// rateID = "rateProfessors";
+// chrome.contextMenus.create({
+//   id: rateID,
+//   title: "Look up professor rating",
+//   contexts: ["selection"],
+// });
+
 // chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 //   if (info.menuItemId == rateID) {
 //     const selectedText = info.selectionText;

@@ -1,8 +1,16 @@
-const fetchHighlightsByURL = (url) => {
-  return chrome.storage.local.get([url]);
-};
-const getHighlightsButton = document.getElementById("getHighlightsButton");
+let highlightsGroup;
+let allHighlights = [];
+async function functionNameHere(){
 
-getHighlightsButton.addEventListener("click", async () => {
-  console.log(chrome.storage.local.get());
-});
+    highlightsGroup = await chrome.storage.local.get();
+
+    Object.values(highlightsGroup).forEach(element => {
+        for(i=0; i<element.length; i++)
+        allHighlights.push(element[i].textContent);
+    });
+    console.log(allHighlights);
+}
+
+// getHighlightsButton.addEventListener("click", async () => {
+//   console.log(chrome.storage.local.get());
+// });
