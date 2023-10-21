@@ -32,9 +32,10 @@ chrome.contextMenus.create({
   contexts: ["selection"]
 });
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (info.menuItemId != rateID) return
-  const selectedText = info.selectionText;
-  console.log(selectedText);
-  const searchURL = "https://www.ratemyprofessors.com/search/professors?q=" + selectedText;
-  chrome.tabs.create({ url: searchURL});
+  if (info.menuItemId == rateID) {
+    const selectedText = info.selectionText;
+    console.log(selectedText);
+    const searchURL = "https://www.ratemyprofessors.com/search/professors?q=" + selectedText;
+    chrome.tabs.create({ url: searchURL});
+  }
 });
