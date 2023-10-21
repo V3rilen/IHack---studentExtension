@@ -1,0 +1,13 @@
+{
+    "manifest_version": 3,
+    "name": "Student Resources",
+    "version": "1.0",
+    "description": "An extension to aid students by offering specific resources.",
+    "permissions": [
+      "activeTab"
+    ],
+    "action": {
+      "default_popup": "./popup/popup.html"
+    }
+  }
+  
