@@ -12,10 +12,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       .toString()
       .padStart(2, "0")}`;
   }
-  if (message.timerIndex%2==0) {
+  if (message.timerIndex % 2 == 0) {
     statisdisplay.textContent = "Work for ";
-  }
-  else {
+  } else {
     statisdisplay.textContent = "Break for ";
   }
 });
@@ -39,14 +38,16 @@ clearHighlightsButton.addEventListener("click", async () => {
   );
 });
 
-document.getElementById("flashcard-window-button").addEventListener("click", () => {
-  chrome.windows.create({
-    url: "flashcards/flashcards.html",
-    type: "popup",
-    width: 800, // Adjust the size as needed
-    height: 600,
+document
+  .getElementById("flashcard-window-button")
+  .addEventListener("click", () => {
+    chrome.windows.create({
+      url: "flashcards/flashcards.html",
+      type: "popup",
+      width: 800, // Adjust the size as needed
+      height: 600,
+    });
   });
-});
 
 //Sessions
 savedSessions = {};
@@ -58,35 +59,37 @@ document.addEventListener("DOMContentLoaded", async () => {
   console.log(savedSessions);
   // chrome.storage.local.clear();
 
-  if(Object.keys(savedSessions).length) {
+  if (Object.keys(savedSessions).length) {
     console.log("there are saved sessions: " + savedSessions);
-    Object.keys(savedSessions).forEach( (sessionName) => {
-      const newButton = document.createElement('button');
+    Object.keys(savedSessions).forEach((sessionName) => {
+      const newButton = document.createElement("button");
       newButton.textContent = sessionName;
-      newButton.addEventListener('click', function() {
-        openSession(savedSessions[sessionName])
+      newButton.addEventListener("click", function () {
+        openSession(savedSessions[sessionName]);
       });
       sessionsDiv.appendChild(newButton);
-    })
+    });
   }
-})
+});
 
 document.getElementById("save-session").addEventListener("click", () => {
-  const sessionName = prompt("Enter a name for your session. \n (keep the same name to overwrite)");
-  if(!sessionName) return
-  chrome.tabs.query({}, function(tabs) {
-    const urls = tabs.map(tab => tab.url);
+  const sessionName = prompt(
+    "Enter a name for your session. \n (keep the same name to overwrite)"
+  );
+  if (!sessionName) return;
+  chrome.tabs.query({}, function (tabs) {
+    const urls = tabs.map((tab) => tab.url);
     savedSessions[sessionName] = urls;
 
     // Update local storage with the updated sessions
-    chrome.storage.local.set({"savedSessions": savedSessions });
+    chrome.storage.local.set({ savedSessions: savedSessions });
     console.log(savedSessions);
 
     // Create a button for the new session
-    const newButton = document.createElement('button');
+    const newButton = document.createElement("button");
     newButton.textContent = sessionName;
-    newButton.addEventListener('click', function() {
-      openSession(savedSessions[sessionName])
+    newButton.addEventListener("click", function () {
+      openSession(savedSessions[sessionName]);
     });
     sessionsDiv.appendChild(newButton);
   });
@@ -101,4 +104,3 @@ function openSession(urls) {
     });
   });
 }
-
