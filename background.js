@@ -57,16 +57,15 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 });
 
 let timerInterval;
-let timerDuration = [15, 30, 15, 30, 15, 3, 15, 18]; // Initial duration (25 minutes in seconds)
+let timerDuration = [5, 3, 5, 3, 5, 3, 5, 8]; // Initial duration (25 minutes in seconds)
 let timerRunning = false;
 let timerIndex = 0;
-let timeRemaining = 15;
+let timeRemaining = timerDuration[timerIndex];
 
 function startTimer() {
   if (!timerRunning) {
     timerInterval = setInterval(updateTimer, 1000);
     timerRunning = true;
-    console.log("index start call:", timerIndex);
   }
 }
 
@@ -76,20 +75,18 @@ function pauseTimer() {
 }
 
 function resetTimer() {
-  console.log("index after call:", timerIndex);
+  console.log(timerIndex);
   pauseTimer();
-  if ((timerIndex = 7)) timerIndex = 0;
+  if (timerIndex == 7) timerIndex = -1;
+  timerIndex++;
   timeRemaining = timerDuration[timerIndex];
   sendUpdateToPopup();
 }
 
 function updateTimer() {
-  if (timeRemaining > 0) {
-    timeRemaining--;
-    sendUpdateToPopup();
-  } else {
-    console.log("index before call:", timerIndex);
-    timerIndex++;
+  timeRemaining--;
+  sendUpdateToPopup();
+  if (timeRemaining == 0) {
     resetTimer();
   }
 }
