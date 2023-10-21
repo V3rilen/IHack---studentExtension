@@ -1,8 +1,12 @@
-.popup {
-    width: 250px;
-    padding: 10px;
-  }
-  
+body{
+  padding: 15px;
+  width: 250px;
+  background-color: #222933;
+  color: #4D91E3;
+}
+
+
+
   ul {
     list-style: none;
     padding: 0;
@@ -30,12 +34,18 @@
     display: inline-block;
   }
 
+  .tooltip img {
+    width: 16px;
+    filter: invert(1);
+  }
+
   /* Tooltip text */
   .tooltip .tooltiptext {
+    filter: no;
   visibility: hidden;
   width: 130px;
-  background-color: rgb(58, 58, 58);
-  color: #fff;
+  background-color: #5C6B7D;
+  color: #8ABEFF;
   text-align: center;
   border-radius: 6px;
   padding: 5px 0;
@@ -56,7 +66,8 @@
   border-style: solid;
   border-color: transparent transparent rgb(58, 58, 58) transparent;
 }
-  
+
+
  
 /* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
