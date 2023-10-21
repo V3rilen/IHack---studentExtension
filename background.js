@@ -44,28 +44,29 @@ rateID = "rateProfessors";
 chrome.contextMenus.create({
   id: rateID,
   title: "Look up professor rating",
-  contexts: ["selection"]
+  contexts: ["selection"],
 });
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId == rateID) {
     const selectedText = info.selectionText;
     console.log(selectedText);
-    const searchURL = "https://www.ratemyprofessors.com/search/professors?q=" + selectedText;
-    chrome.tabs.create({ url: searchURL});
+    const searchURL =
+      "https://www.ratemyprofessors.com/search/professors?q=" + selectedText;
+    chrome.tabs.create({ url: searchURL });
   }
 });
-
 
 let timerInterval;
 let timerDuration = [15, 30, 15, 30, 15, 3, 15, 18]; // Initial duration (25 minutes in seconds)
 let timerRunning = false;
 let timerIndex = 0;
-let timeRemaining = timerDuration[timerIndex];
+let timeRemaining = 15;
 
 function startTimer() {
   if (!timerRunning) {
     timerInterval = setInterval(updateTimer, 1000);
     timerRunning = true;
+    console.log("index start call:", timerIndex);
   }
 }
 
@@ -75,20 +76,19 @@ function pauseTimer() {
 }
 
 function resetTimer() {
-  console.log(timerIndex);
+  console.log("index after call:", timerIndex);
   pauseTimer();
-  if (timerIndex = 7) timerIndex = 0;
-  timeRemaining = timerDuration[timerIndex]
+  if ((timerIndex = 7)) timerIndex = 0;
+  timeRemaining = timerDuration[timerIndex];
   sendUpdateToPopup();
 }
-
 
 function updateTimer() {
   if (timeRemaining > 0) {
     timeRemaining--;
     sendUpdateToPopup();
   } else {
-    console.log("not calling it");
+    console.log("index before call:", timerIndex);
     timerIndex++;
     resetTimer();
   }

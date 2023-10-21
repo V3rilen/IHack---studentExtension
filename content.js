@@ -2,29 +2,54 @@ const fetchHighlights = (url) => {
   return chrome.storage.local.get([url]);
 };
 
+// function getXPathOfElement(element) {
+//   if (element.id !== "") {
+//     // If the element has an ID, use it for the XPath
+//     return `//*[@id="${element.id}"]`;
+//   }
+//   if (element === document.body) {
+//     // If we reach the body element, stop
+//     return element.tagName;
+//   }
+
+//   // Find the element's index among its siblings
+//   let index = 1;
+//   let sibling = element;
+//   if (element.classList.contains("highlighted")) {
+//     return (
+//       getXPathOfElement(element.parentNode) +
+//       "/" +
+//       element.tagName +
+//       `[${index}]`
+//     );
+//   }
+
+//   while (sibling && (sibling = sibling.previousElementSibling)) {
+//     index++;
+//   }
+
+//   // Recurse up the DOM to build the full XPath
+//   return (
+//     getXPathOfElement(element.parentNode) + "/" + element.tagName + `[${index}]`
+//   );
+// }
+
 function getXPathOfElement(element) {
-  if (element.id !== "") {
-    // If the element has an ID, use it for the XPath
-    return `//*[@id="${element.id}"]`;
-  }
-
-  if (element === document.body) {
-    // If we reach the body element, stop
-    return element.tagName;
-  }
-
-  // Find the element's index among its siblings
-  let index = 1;
-  let sibling = element;
-
-  while (sibling && (sibling = sibling.previousElementSibling)) {
-    index++;
-  }
-
-  // Recurse up the DOM to build the full XPath
-  return (
-    getXPathOfElement(element.parentNode) + "/" + element.tagName + `[${index}]`
-  );
+  const idx = (sib, name) =>
+    sib
+      ? idx(sib.previousElementSibling, name || sib.localName) +
+        (sib.localName == name)
+      : 1;
+  const segs = (elm) =>
+    !elm || elm.nodeType !== 1
+      ? [""]
+      : elm.id && document.getElementById(elm.id) === elm
+      ? [`//*[@id="${elm.id}"]`]
+      : [
+          ...segs(elm.parentNode),
+          `${elm.localName.toLowerCase()}[${idx(elm)}]`,
+        ];
+  return segs(element).join("/");
 }
 
 function createElementAtXPath(xpath, newElement) {
@@ -39,10 +64,11 @@ function createElementAtXPath(xpath, newElement) {
   const targetElement = result.singleNodeValue;
 
   if (targetElement) {
-    const element = document.createElement(newElement.tagName);
-    element.textContent = newElement.textContent;
+    // const element = document.createElement(newElement.tagName);
+    // element.textContent = newElement.textContent;
+    // element.className = "highlighted";
 
-    targetElement.parentNode.insertBefore(element, targetElement);
+    targetElement.innerHTML = newElement.parentNodeHTML;
   } else {
     console.log("error");
   }
@@ -62,11 +88,20 @@ function createElementAtXPath(xpath, newElement) {
   const currentURL = window.location.toString();
 
   let pageHighlights = [];
-  if (await fetchHighlights(currentURL)) {
-    pageHighlights = await fetchHighlights(currentURL);
+  let fetchedHighlights = await fetchHighlights(currentURL);
+  if (fetchedHighlights[currentURL]) {
+    pageHighlights = [...fetchedHighlights[currentURL]];
+    pageHighlights.forEach((highlight) => {
+      //   console.log(highlight.textContent, highlight.xpath.split("/span")[0]);
+      createElementAtXPath(highlight.xpath.split("/span")[0], {
+        tagName: "span",
+        parentNodeHTML: highlight.parentNodeHTML,
+        textContent: highlight.textContent,
+      });
+    });
     // console.log(await fetchHighlights(currentURL));
   }
-  //   console.log(pageHighlights);
+  //   console.log(`Page Highlights, ${pageHighlights} loaded`);
 
   chrome.runtime.onMessage.addListener(
     async (request, sender, sendResponse) => {
@@ -78,15 +113,21 @@ function createElementAtXPath(xpath, newElement) {
             selectedText.anchorNode.parentNode.classList.contains("highlighted")
           ) {
             selectedText.anchorNode.parentNode.classList.toggle("highlighted");
+            pageHighlights = pageHighlights.filter((highlight) => {
+              return highlight.textContent !== selectedText.toString();
+            });
           } else {
             const newHighlightedElement = document.createElement("span");
             newHighlightedElement.className = "highlighted";
             selectedTextRange.surroundContents(newHighlightedElement);
+            console.log();
             let highlightData = {
               xpath: getXPathOfElement(newHighlightedElement),
-              textContent: newHighlightedElement.textContent,
+              parentNodeHTML:
+                selectedTextRange.commonAncestorContainer.innerHTML,
+              textContent: selectedText.toString(),
             };
-            console.log(highlightData);
+            // console.log(highlightData);
             pageHighlights.push(highlightData);
 
             //   console.log(getElementXPath(newHighlightedElement.parentElement));
@@ -109,12 +150,17 @@ function createElementAtXPath(xpath, newElement) {
             //   pageHighlights.push(getElementXPath(newHighlightedElement));
             //   console.log("page highlights before:", selectedText);
             //   console.log(document.documentElement.toString());
-            chrome.storage.local.set({
-              [currentURL]: pageHighlights,
-            });
-            console.log();
           }
+          chrome.storage.local.set({
+            [currentURL]: pageHighlights,
+          });
+          //   chrome.storage.local.clear();
+          let tempHighlights = await fetchHighlights(currentURL);
+          console.log([...tempHighlights[currentURL]]);
         }
+      } else if (request.message_id == "clearHighlights") {
+        console.log("hit");
+        chrome.storage.local.clear();
       }
       /* Content script action */
     }
