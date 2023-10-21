@@ -26,4 +26,11 @@ stopButton.addEventListener("click", () => {
   chrome.runtime.sendMessage({ type: "stopTimer" });
 });
 
-
+document.getElementById("flashcard-window-button").addEventListener("click", () => {
+  chrome.windows.create({
+    url: "flashcards.html",
+    type: "popup",
+    width: 800, // Adjust the size as needed
+    height: 600,
+  });
+});
