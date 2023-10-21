@@ -4,7 +4,7 @@
     "version": "1.0",
     "description": "An extension to aid students by offering specific resources.",
     "permissions": [
-      "activeTab","contextMenus","tabs","storage","alarms", "notifications"
+      "activeTab", "contextMenus", "tabs", "storage", "alarms", "notifications"
     ],
     "action": {
       "default_popup": "./popup/popup.html"

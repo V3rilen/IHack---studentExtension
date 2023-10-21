@@ -4,7 +4,6 @@ chrome.contextMenus.create({
   title: "Highlight Text",
   contexts: ["selection"],
 });
-
 //context menu option to look up rate my professor
 rateID = "rateProfessors";
 chrome.contextMenus.create({
@@ -18,7 +17,13 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     console.log(selectedText);
     const searchURL =
       "https://www.ratemyprofessors.com/search/professors?q=" + selectedText;
-    chrome.tabs.create({ url: searchURL });
+    chrome.windows.create({
+      url: searchURL,
+      type: "popup",
+      width: 800, // Adjust the size as needed
+      height: 600,
+    });
+    // chrome.tabs.create({ url: searchURL });
   } else if (info.menuItemId === "highlightText") {
     const selectedText = info.selectionText;
     console.log(info);
@@ -46,15 +51,15 @@ chrome.contextMenus.create({
   title: "Look up professor rating",
   contexts: ["selection"],
 });
-chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (info.menuItemId == rateID) {
-    const selectedText = info.selectionText;
-    console.log(selectedText);
-    const searchURL =
-      "https://www.ratemyprofessors.com/search/professors?q=" + selectedText;
-    chrome.tabs.create({ url: searchURL });
-  }
-});
+// chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+//   if (info.menuItemId == rateID) {
+//     const selectedText = info.selectionText;
+//     console.log(selectedText);
+//     const searchURL =
+//       "https://www.ratemyprofessors.com/search/professors?q=" + selectedText;
+//     chrome.tabs.create({ url: searchURL });
+//   }
+// });
 
 let timerInterval;
 let timerDuration = [5, 3, 1500, 300, 1500, 30, 1500, 1800]; // Initial duration (25 minutes in seconds)
