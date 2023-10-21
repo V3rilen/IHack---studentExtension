@@ -60,15 +60,10 @@ function stopTimer() {
 
 function resetTimer(y) {
   stopTimer();
-  timerDuration = y * 60;
+  timerDuration = y * 1;
   sendUpdateToPopup();
 }
 
-function resetTimer5() {
-  stopTimer();
-  timerDuration = 5 * 1;
-  sendUpdateToPopup();
-}
 
 function updateTimer() {
   if (timerDuration > 0) {
