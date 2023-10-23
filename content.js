@@ -58,7 +58,15 @@ function createElementAtXPath(xpath, newElement) {
 
   let pageHighlights = [];
   let fetchedHighlights = await chrome.storage.local.get("savedHighlights");
+  // console.log(fetchedHighlights);
   if (fetchedHighlights.savedHighlights) {
+    highlights = fetchedHighlights.savedHighlights;
+  }
+  console.log("loaded highlights:", fetchedHighlights.savedHighlights);
+  if (
+    fetchedHighlights.savedHighlights &&
+    fetchedHighlights.savedHighlights[currentURL]
+  ) {
     pageHighlights = [...fetchedHighlights.savedHighlights[currentURL]];
     // console.log("Saved Highlights:", pageHighlights);
     Object.keys(pageHighlights).forEach((pageURL) => {
@@ -99,41 +107,20 @@ function createElementAtXPath(xpath, newElement) {
                 selectedTextRange.commonAncestorContainer.innerHTML,
               textContent: selectedText.toString(),
             };
-            // console.log(highlightData);
             pageHighlights.push(highlightData);
             highlights[currentURL] = pageHighlights;
-
-            //   console.log(getElementXPath(newHighlightedElement.parentElement));
-            //   const targetXPath = getElementXPath(
-            //     newHighlightedElement.parentElement
-            //   );
-            //   const newElementInfo = {
-            //     tagName: "span",
-            //     textContent: "WOOOOOOOORDS",
-            //   };
-
-            //   createElementAtXPath(targetXPath, newElementInfo);
-            //   //   const rangeData = {
-            //   //     commonAncestorContainer: selectedTextRange.commonAncestorContainer,
-            //   //     startContainer: selectedTextRange.startContainer,
-            //   //     startOffset: selectedTextRange.startOffset,
-            //   //     endContainer: selectedTextRange.endContainer,
-            //   //     endOffset: selectedTextRange.endOffset,
-            //   //   };
-            //   pageHighlights.push(getElementXPath(newHighlightedElement));
-            //   console.log("page highlights before:", selectedText);
-            //   console.log(document.documentElement.toString());
           }
           chrome.storage.local.set({
             savedHighlights: highlights,
           });
           //   chrome.storage.local.clear();
-          let tempHighlights = await fetchHighlights("savedHighlights");
-          console.log(tempHighlights);
+          // let tempHighlights = await fetchHighlights("savedHighlights");
+          // console.log(tempHighlights);
         }
       } else if (request.message_id == "clearHighlights") {
         if (confirm("Are you sure you want to delete all Highlights?")) {
           chrome.storage.local.remove("savedHighlights");
+          location.reload();
         }
       }
       /* Content script action */
